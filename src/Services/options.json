@@ -1,0 +1,42 @@
+[
+  {
+    "label": "Gas",
+    "value": "Gas"
+  },
+  {
+    "label": "Utilities",
+    "value": "utilities"
+  },
+  {
+    "label": "Room and Board/Rent",
+    "value": "Room and Board/Rent"
+  },
+  {
+    "label": "Meal Plan",
+    "value": "Meal Plan"
+  },
+  {
+    "label": "Groceries",
+    "value": "Groceries"
+  },
+  {
+    "label": "Travel",
+    "value": "Travel"
+  },
+  {
+    "label": "Cell Phone Bill",
+    "value": "Cell Phone Bill"
+  },
+  {
+    "label": "Insurance",
+    "value": "Insurance"
+  },
+  {
+    "label": "Personal Shopping",
+    "value": "Personal Shopping"
+  },
+  {
+    "label": "Subscritions",
+    "value": "Subscriptions"
+  }
+]
