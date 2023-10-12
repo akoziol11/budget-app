@@ -1,21 +1,18 @@
 import React from "react";
-// Loads the JSON data into the checkboxes as a series of options
-const ExpenseList = ({ options }) => {
-  const optionItems = [];
-  if (!Array.isArray(options)) {
-    return <div>No options available</div>; // or display an error message
-  }
 
-  options.forEach((option) => {
-    optionItems.push(
-      <div key={option.value}>
-        <label>
-          <input type="checkbox" />
-          {option.label}
-        </label>
-      </div>
-    );
-  });
+const ExpenseList = ({ options }) => {
+  // if (!Array.isArray(options)) {
+  //   return <div>No options available</div>;
+  // }
+
+  const optionItems = options.map((option) => (
+    <div key={option.value}>
+      <label>
+        <input type="checkbox" value={option.value} />
+        {option.label}
+      </label>
+    </div>
+  ));
 
   return <div>{optionItems}</div>;
 };

@@ -1,35 +1,37 @@
 import Parse from "parse";
 /* SERVICE FOR PARSE SERVER OPERATIONS */
 
-// CREATE operation - new lesson with Name
-export const createIncome = (Amount) => {
-  console.log("Creating: ", Amount);
+// CREATE operation - new income with Name
+export const createIncome = ({salary, gifts, other}) => {
+  console.log("Creating: ", {salary, gifts, other});
   const Income = Parse.Object.extend("Income");
   const income = new Income();
   // using setter to UPDATE the object
-  income.set("salary", Amount);
+  income.set("salary", parseFloat(salary));
+  income.set("gifts", parseFloat(gifts));
+  income.set("other", parseFloat(other));
   return income.save().then((result) => {
-    // returns new Lesson object
+    // returns new Income object
     return result;
   });
 };
 
-// READ operation - get lesson by ID
+// READ operation - get income by ID
 export const getById = (id) => {
   const Income = Parse.Object.extend("Income");
   const query = new Parse.Query(Income);
   return query.get(id).then((result) => {
-    // return Lesson object with objectId: id
+    // return Income object with objectId: id
     return result;
   });
 };
 
-// READ operation - get all lessons in Parse class Lesson
+// READ operation - get all income in Parse class Income
 export const getAllIncomes = () => {
   const Income = Parse.Object.extend("Income");
   const query = new Parse.Query(Income);
   return query.find().then((results) => {
-    // returns array of Lesson objects
+    // returns array of Income objects
     return results;
   });
 };

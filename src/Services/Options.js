@@ -1,10 +1,10 @@
 // Future work: add more options and the ability to allocate
 // a certain amount of the budget to each expense
-
 import axios from "axios";
+import optionsData from "./options.json"
 const url =
   "https://my-json-server.typicode.com/kellybuchanan/WebDev-Spring2021";
-export const createOption = (label, value) => {
+export const createOption = async (label, value) => {
   return axios
     .post(`${url}/options`, {
       label,
@@ -19,18 +19,11 @@ export const createOption = (label, value) => {
 };
 
 export const getAllOptions = () => {
-  return axios
-    .get(`../Services/options.json`)
-    .then((response) => {
-      if (Array.isArray(response.data)) {
-        return response.data; // If it's already an array, return it
-      } else if (typeof response.data === "object") {
-        return Object.values(response.data); // Convert object values to an array
-      } else {
-        return []; // Return an empty array if data is neither an array nor object
-      }
-    })
-    .catch((err) => {
-      console.log("GET Error: ", err);
-    });
+  if (Array.isArray(optionsData)) {
+    return Promise.resolve(optionsData);
+  } else if (typeof optionsData === "object") {
+    return Promise.resolve(Object.values(optionsData));
+  } else {
+    return Promise.resolve([]);
+  }
 };
