@@ -1,0 +1,62 @@
+@import url("https://fonts.googleapis.com/css?family=Poppins:400,900");
+.navigation {
+  display: flex;
+  flex-flow: row wrap;
+  font-family: "Poppins", sans-serif;
+  justify-content: flex-start;
+  list-style: none;
+  margin: 0;
+  background: purple;
+}
+
+.navigation a {
+  text-decoration: none;
+  display: block;
+  padding: 1em;
+  color: white;
+}
+
+/* Turn rebeccapurple when the mouse is over */
+.navigation a:hover {
+  background: rebeccapurple;
+}
+
+/* Turn plum when clicked */
+.navigation a:active {
+  background: plum;
+}
+
+/* Media query styles are only applied if the conditions are met */
+@media all and (max-width: 800px) {
+  .navigation {
+    flex-flow: column wrap;
+    padding: 0;
+  }
+  .navigation a {
+    padding: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .navigation li:last-of-type a {
+    border-bottom: none;
+  }
+}
+
+@media all and (max-width: 600px) {
+  .navigation {
+    flex-flow: column wrap;
+    padding: 0;
+  }
+
+  .navigation a {
+    text-align: center;
+    padding: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .navigation li:last-of-type a {
+    border-bottom: none;
+  }
+}
