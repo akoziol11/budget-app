@@ -1,8 +1,8 @@
-import Parse from 'parse';
+import Parse from "parse";
 
 // Create a new budget object
 export const createBudget = () => {
-  const Budget = Parse.Object.extend('Budget');
+  const Budget = Parse.Object.extend("Budget");
   const budget = new Budget();
   return budget.save().then((result) => {
     return result;
@@ -11,7 +11,7 @@ export const createBudget = () => {
 
 // Get a budget by its ID
 export const getBudgetById = (id) => {
-  const Budget = Parse.Object.extend('Budget');
+  const Budget = Parse.Object.extend("Budget");
   const query = new Parse.Query(Budget);
   return query.get(id).then((result) => {
     return result;
