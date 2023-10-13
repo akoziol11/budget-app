@@ -51,7 +51,7 @@ const BudgetTool = () => {
       try {
         await createExpense(expenseData);
         console.log("Expense created successfully:", expenseData);
-        // Reset expenseData after submission
+        // Clear the form after submission
         setExpenseData({ type: "", amount: "" });
       } catch (error) {
         console.error("Error creating expense:", error);
