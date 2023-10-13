@@ -21,7 +21,7 @@ const BudgetTool = () => {
     };
 
     fetchOptions();
-  }, []);
+  }, []); ; // Pass an empty dependency array to run the effect only once on mount
 
   const handleIncomeSubmit = async (event) => {
     event.preventDefault();
@@ -32,9 +32,11 @@ const BudgetTool = () => {
         await createIncome({
           salary: parseFloat(salary),
           gifts: parseFloat(gifts),
-          other: parseFloat(other),
+          other: parseFloat(other)
         });
         console.log("Income created successfully.");
+
+        // Clear the form after submission
         setIncomeAmount({ salary: "", gifts: "", other: "" });
       } catch (error) {
         console.error("Error creating income:", error);
