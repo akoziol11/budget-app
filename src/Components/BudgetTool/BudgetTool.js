@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
-import Main from "../Main/Main.js";
 import { getAllOptions } from "../../Services/Options.js";
 import ExpenseList from "./ExpenseList.js";
+import ExpenseInput from "./ExpenseInput.js";
 import { createIncome } from "../../Services/IncomeService.js";
+import { createExpense } from "../../Services/ExpenseService.js"
 
 const BudgetTool = () => {
   const [options, setOptions] = useState([]);
-  const [incomeAmount, setIncomeAmount] = useState({salary: "", gifts: "", other: ""});
+  const [incomeAmount, setIncomeAmount] = useState({ salary: "", gifts: "", other: "" });
+  const [expenseData, setExpenseData] = useState({ type: "", amount: "" });
 
   useEffect(() => {
-    // Use an asynchronous function in useEffect to fetch options
     const fetchOptions = async () => {
       try {
         const options = await getAllOptions();
@@ -19,15 +20,14 @@ const BudgetTool = () => {
       }
     };
 
-    // Call the fetchOptions function
     fetchOptions();
-  }, []); // Pass an empty dependency array to run the effect only once on mount
+  }, []); ; // Pass an empty dependency array to run the effect only once on mount
 
   const handleIncomeSubmit = async (event) => {
     event.preventDefault();
-    const {salary, gifts, other} = incomeAmount;
+    const { salary, gifts, other } = incomeAmount;
 
-    if ( salary && gifts ** other) {
+    if (salary && gifts && other) {
       try {
         await createIncome({
           salary: parseFloat(salary),
@@ -36,10 +36,25 @@ const BudgetTool = () => {
         });
         console.log("Income created successfully.");
 
-        // Clear the input field after successful submission
+        // Clear the form after submission
         setIncomeAmount({ salary: "", gifts: "", other: "" });
       } catch (error) {
         console.error("Error creating income:", error);
+      }
+    }
+  };
+
+  const handleExpenseSubmit = async (event) => {
+    event.preventDefault();
+
+    if (expenseData.type && expenseData.amount) {
+      try {
+        await createExpense(expenseData);
+        console.log("Expense created successfully:", expenseData);
+        // Reset expenseData after submission
+        setExpenseData({ type: "", amount: "" });
+      } catch (error) {
+        console.error("Error creating expense:", error);
       }
     }
   };
@@ -48,12 +63,8 @@ const BudgetTool = () => {
     <section>
       <h1>Welcome to the Budgeting Tool</h1>
       <div className="container">
-        <form
-          action="/budgetTool.php"
-          id="budgetForm"
-          onSubmit={handleIncomeSubmit}
-        >
-          <h3>Income:</h3>
+        <form action="/budgetTool.php" id="budgetForm" onSubmit={handleIncomeSubmit}>
+        <h3>Income:</h3>
           <label htmlFor="salary">Salary: </label>
           <input
             type="number"
@@ -92,9 +103,16 @@ const BudgetTool = () => {
             <ExpenseList options={options} />
           </div>
           <br />
-          <br />
           <button type="submit">Submit</button>
         </form>
+        <div>
+          <ExpenseInput
+            options={options}
+            expenseData={expenseData}
+            setExpenseData={setExpenseData}
+          />
+          <button type="submit" onClick={handleExpenseSubmit}>Submit Expense</button>
+        </div>
       </div>
     </section>
   );
