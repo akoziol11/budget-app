@@ -18,12 +18,12 @@
 
 /* Turn rebeccapurple when the mouse is over */
 .navigation a:hover {
-  background: rebeccapurple;
+  background: #6a1b9a;
 }
 
 /* Turn plum when clicked */
 .navigation a:active {
-  background: plum;
+  background: #6a1b9a;
 }
 
 /* Media query styles are only applied if the conditions are met */
