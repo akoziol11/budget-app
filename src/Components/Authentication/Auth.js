@@ -5,12 +5,8 @@ import AuthLogin from "./AuthLogin"
 const AuthModule = () => {
   return (
     <div>
-      <Link to="/register">
-        <button>Register</button>
-      </Link>
-      <br />
-      <br />
       <AuthLogin />
+      <p>Don't have an account? <Link to="/register">Register here</Link></p>
     </div>
   );
 };

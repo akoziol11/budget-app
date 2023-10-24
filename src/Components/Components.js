@@ -14,7 +14,7 @@ export default function Components() {
         <Route path="/" element={<Main />} />
         <Route path="/tool" element={<BudgetTool />} />
         <Route path="/register" element={<AuthRegister />} />
-        <Route path="*" element={<Navigate to="/home" replace />} />
+        <Route path="*" element={<Navigate to="/auth" replace />} />
       </Routes>
     </Router>
   );

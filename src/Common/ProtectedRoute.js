@@ -8,9 +8,6 @@ const ProtectedRoute = ({ element: Component, flag, ...rest }) => {
   };
   console.log("rest: ", rest);
 
-  // hint: you can swp out the Navigate redirect for the Component
-  // <Component />
-
   return (
     <div>
       {flag ? (

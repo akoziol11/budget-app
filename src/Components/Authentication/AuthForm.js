@@ -1,66 +1,59 @@
 import React from "react";
+import "../../auth-styles.css";
 
 const AuthForm = ({ user, onChange, onSubmit }) => {
-  return (
-    <div>
-      <form onSubmit={onSubmit}>
-        <div>
-          <label>First Name</label>
-          <br />
-          <input
-            type="text"
-            value={user.firstName}
-            onChange={onChange}
-            name="firstName"
-            placeholder="first name"
-            required
-          />
+    return (
+        <div className="auth-container">
+            <form onSubmit={onSubmit}>
+            <h3>Register to get started</h3>
+            <br />
+            <div>
+                <label>First Name:</label>
+                <input
+                    type="text"
+                    value={user.firstName}
+                    onChange={onChange}
+                    name="firstName"
+                    required
+                />
+            </div>
+            <div>
+                <label>Last Name:</label>
+                <input
+                    type="text"
+                    value={user.lastName}
+                    onChange={onChange}
+                    name="lastName"
+                    required
+                />
+            </div>{" "}
+            <div>
+                <label>Email:</label>
+                <input
+                    type="email"
+                    value={user.email}
+                    onChange={onChange}
+                    name="email"
+                    required
+                />
+            </div>{" "}
+            <div>
+                <label>Password:</label>
+                <input
+                    type="password"
+                    value={user.password}
+                    onChange={onChange}
+                    name="password"
+                    min="0"
+                    required
+                />
+            </div>
+            <div>
+                <button type="submit" onSubmit={onSubmit}>Submit</button>
+            </div>
+            </form>
         </div>
-        <div>
-          <label>Last Name</label>
-          <br />
-          <input
-            type="text"
-            value={user.lastName}
-            onChange={onChange}
-            name="lastName"
-            placeholder="last name"
-            required
-          />
-        </div>{" "}
-        <div>
-          <label>Email</label>
-          <br />
-          <input
-            type="email"
-            value={user.email}
-            onChange={onChange}
-            name="email"
-            placeholder="email"
-            required
-          />
-        </div>{" "}
-        <div>
-          <label>Password</label>
-          <br />
-          <input
-            type="password"
-            value={user.password}
-            onChange={onChange}
-            name="password"
-            placeholder="password"
-            min="0"
-            required
-          />
-        </div>
-        <div>
-          <button type="submit" onSubmit={onSubmit}>
-            Submit
-          </button>
-        </div>
-      </form>
-    </div>
-  );
+    );
 };
 
 export default AuthForm;
