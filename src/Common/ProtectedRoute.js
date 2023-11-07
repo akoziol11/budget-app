@@ -1,24 +1,11 @@
 import React from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { checkUser } from "../Components/Authentication/AuthService.js";
 
-const ProtectedRoute = ({ element: Component, flag, ...rest }) => {
-  const navigate = useNavigate();
-  const goBackHandler = () => {
-    navigate(-1);
-  };
-  console.log("rest: ", rest);
 
-  return (
-    <div>
-      {flag ? (
-        <Navigate to={rest.path} replace />
-      ) : (
-        <div>
-          <p>Unauthorized!</p> <button onClick={goBackHandler}>Go Back.</button>
-        </div>
-      )}
-    </div>
-  );
+
+const ProtectedRoute = ({ element: Component, ...rest }) => {
+  return checkUser() ? <Component /> : <Navigate to="/auth" replace />;
 };
 
 export default ProtectedRoute;

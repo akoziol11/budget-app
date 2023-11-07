@@ -1,19 +1,29 @@
-import Main from "./Main/Main";
-import BudgetTool from "./BudgetTool/BudgetTool";
-import NavigationBar from "./NavigationBar/NavigationBar";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import React from "react";
-import AuthRegister from "./Authentication/AuthRegister.js";
+import {
+  BrowserRouter as Router,
+  Navigate,
+  Routes,
+  Route
+} from "react-router-dom";
+import AuthModule from "./Authentication/Auth.js";
+import AuthRegister from "./Authentication/AuthRegister";
+import ProtectedRoute from "../Common/ProtectedRoute.js";
+import MainGood from "./Main/MainGood.js";
+import BudgetTool from "../Components/BudgetTool/BudgetTool.js"
 
 
+// Figure out how to get first loaded page to be at /auth
 export default function Components() {
   return (
     <Router>
-      <NavigationBar />
       <Routes>
-        <Route path="/" element={<Main />} />
+        <Route path="/auth" element={<AuthModule />} />
+        <Route path="/auth/register" element={<AuthRegister />} />
+        <Route
+          path="/"
+          element={<ProtectedRoute path="/" element={MainGood} />}
+        />
         <Route path="/tool" element={<BudgetTool />} />
-        <Route path="/register" element={<AuthRegister />} />
         <Route path="*" element={<Navigate to="/auth" replace />} />
       </Routes>
     </Router>

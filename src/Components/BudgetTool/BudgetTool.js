@@ -4,6 +4,7 @@ import ExpenseList from "./ExpenseList.js";
 import ExpenseInput from "./ExpenseInput.js";
 import { createIncome } from "../../Services/IncomeService.js";
 import { createExpense } from "../../Services/ExpenseService.js"
+import NavigationBar from "../NavigationBar/NavigationBar.js";
 
 const BudgetTool = () => {
   const [options, setOptions] = useState([]);
@@ -61,6 +62,7 @@ const BudgetTool = () => {
 
   return (
     <section>
+      <NavigationBar />
       <h1>Welcome to the Budgeting Tool</h1>
       <div className="container">
         <form action="/budgetTool.php" id="budgetForm" onSubmit={handleIncomeSubmit}>

@@ -25,14 +25,14 @@ p {
 .auth-container input[type="email"],
 .auth-container input[type="password"],
 .auth-container input[type="text"] {
-    width: calc(100% - 20px); /* Adjusted width to provide some spacing */
+    width: calc(100% - 20px);
     margin: 0 auto;
     padding: 10px;
     margin-bottom: 20px;
     border: 1px solid lightgrey;
     border-radius: 5px;
     font-size: 16px;
-    box-sizing: border-box; /* Ensures padding and border are included in the element's total width and height */
+    box-sizing: border-box;
 }
 
 .auth-container button {
@@ -48,7 +48,7 @@ p {
 }
 
 .auth-container button:hover {
-    background-color: #6a1b9a;;
+    background-color: #6a1b9a;
 }
 
 .auth-container .error-message {

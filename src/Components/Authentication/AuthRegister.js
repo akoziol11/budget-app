@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { createUser } from "./AuthService";
+import { checkUser, createUser } from "./AuthService";
 import AuthForm from "./AuthForm";
-import "../../auth-styles.css"
+import { useNavigate } from "react-router-dom";
 
 const AuthRegister = () => {
+  const navigate = useNavigate();
+
   const [newUser, setNewUser] = useState({
     firstName: "",
     lastName: "",
@@ -11,9 +13,18 @@ const AuthRegister = () => {
     password: ""
   });
 
-  // flag is the state to watch for add/remove updates
+  // flags in the state to watch for add/remove updates
   const [add, setAdd] = useState(false);
 
+  // redirect already authenticated users back to home
+  useEffect(() => {
+    if (checkUser()) {
+      alert("You are already logged in");
+      navigate("/");
+    }
+  }, [navigate]);
+
+  // useEffect that run when changes are made to the state variable flags
   useEffect(() => {
     if (newUser && add) {
       createUser(newUser).then((userCreated) => {
@@ -21,18 +32,23 @@ const AuthRegister = () => {
           alert(
             `${userCreated.get("firstName")}, you successfully registered!`
           );
+          navigate("/");
         }
         setAdd(false);
       });
     }
-  }, [newUser, add]);
+  }, [navigate, newUser, add]);
 
   const onChangeHandler = (e) => {
     e.preventDefault();
     console.log(e.target);
     const { name, value: newValue } = e.target;
     console.log(newValue);
-    setNewUser({ ...newUser, [name]: newValue });
+
+    setNewUser({
+      ...newUser,
+      [name]: newValue
+    });
   };
 
   const onSubmitHandler = (e) => {
@@ -42,7 +58,8 @@ const AuthRegister = () => {
   };
 
   return (
-    <div>
+    <div className = "auth-container">
+      <h3>Register to get started</h3>
       <AuthForm
         user={newUser}
         onChange={onChangeHandler}
