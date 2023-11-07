@@ -1,78 +1,70 @@
-import React, { useState } from "react";
-import Parse from "parse";
-import ProtectedRoute from "../../Common/ProtectedRoute";
-import MainGood from "../Main/MainGood";
-import "../../auth-styles.css";
+import React, { useEffect, useState } from "react";
+import { checkUser, loginUser } from "./AuthService";
+import AuthForm from "./AuthForm";
+import { useNavigate } from "react-router-dom";
 
 const AuthLogin = () => {
-  const [credentials, setCredentials] = useState({
+  const navigate = useNavigate();
+
+  // redirect already authenticated users back to home
+  const [currentUser, setCurrentUser] = useState({
     email: "",
     password: ""
   });
 
-  const [flag, setFlag] = useState(false);
+  // flags in the state to watch for add/remove updates
+  const [add, setAdd] = useState(false);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setCredentials({ ...credentials, [name]: value });
+  // // redirect already authenticated users back to home
+  // useEffect(() => {
+  //   if (checkUser()) {
+  //     alert("You are already logged in");
+  //     navigate("/");
+  //   }
+  // }, [navigate]);
+
+  // useEffect that run when changes are made to the state variable flags
+  useEffect(() => {
+    if (currentUser && add) {
+      loginUser(currentUser).then((userLoggedIn) => {
+        if (userLoggedIn) {
+          alert(
+            `${userLoggedIn.get("firstName")}, you successfully logged in!`
+          );
+          navigate("/");
+        }
+        setAdd(false);
+      });
+    }
+  }, [navigate, currentUser, add]);
+
+  const onChangeHandler = (e) => {
+    e.preventDefault();
+    console.log(e.target);
+    const { name, value: newValue } = e.target;
+    console.log(newValue);
+
+    setCurrentUser({
+      ...currentUser,
+      [name]: newValue
+    });
   };
 
-  const checkValidUser = async () => {
-    try {
-      const user = await Parse.User.logIn(credentials.email, credentials.password);
-        if (user) {
-          setFlag(true); // Set flag to true when the user is authenticated
-        } else {
-          console.log("Unauthorized!");
-          setFlag(false);
-        }
-    } catch (error) {
-      if (error.code === Parse.Error.OBJECT_NOT_FOUND) {
-        // 101 error code: Invalid username or password
-        alert("Invalid username or password. Please try again.");
-      } else {
-        // Handle other error codes or display a generic error message
-        alert("An error occurred. Please try again later.");
-      }
-      console.error("Error:", error);
-    }
-  };      
-
-  const handleSubmit = (e) => {
+  const onSubmitHandler = (e) => {
     e.preventDefault();
-    checkValidUser(); // Call checkValidUser when the form is submitted
+    console.log("submitted: ", e.target);
+    setAdd(true);
   };
 
   return (
-    <div className="auth-container">
-      <h3>Sign in to get started</h3>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            name="email"
-            value={credentials.email}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div>
-        <label>Password:</label>
-        <input
-          type="password"
-          name="password"
-          value={credentials.password}
-          onChange={handleInputChange}
-          required
-        />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-      {/* If authentication passes, the user can use a protected route to move to the home page */}
-      {flag && 
-        (<ProtectedRoute exact path="/home" flag={flag} element={MainGood} />
-      )}
+    <div className = "auth-container">
+      <h3> Already have an account? Sign in to get started</h3>
+      <AuthForm
+        user={currentUser}
+        isLogin={true}
+        onChange={onChangeHandler}
+        onSubmit={onSubmitHandler}
+      />
     </div>
   );
 };

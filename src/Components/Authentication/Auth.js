@@ -1,12 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import AuthLogin from "./AuthLogin"
+import { useNavigate } from "react-router-dom";
+import { checkUser } from "./AuthService.js";
+import AuthLogin from "./AuthLogin.js"
 
 const AuthModule = () => {
+  const navigate = useNavigate();
+
+  // redirect authenticated users to the home page
+  useEffect(() => {
+    if (checkUser()) {
+      alert("You are already logged in");
+      navigate("/");
+    }
+  }, [navigate]);
+
   return (
     <div>
+      <h1> Welcome to Budget Buddy! </h1>
       <AuthLogin />
-      <p>Don't have an account? <Link to="/register">Register here</Link></p>
+      <p>Don't have an account? <Link to="/auth/register">Register here</Link></p>
     </div>
   );
 };

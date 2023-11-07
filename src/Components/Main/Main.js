@@ -1,9 +1,12 @@
 import AuthModule from "../Authentication/Auth.js";
-export default function Main() {
+
+const Main = () => {
   return (
-    <section>
+    <div>
       <h1>Welcome to your personal Budget Buddy!</h1>
       <AuthModule />
-    </section>
+    </div>
   );
 }
+
+export default Main;
