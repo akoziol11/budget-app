@@ -2,6 +2,7 @@ import React from "react";
 import "../../auth-styles.css"
 const AuthForm = ({ user, isLogin, onChange, onSubmit }) => {
 
+  // Login/Register form
   return (
     <form onSubmit={onSubmit} autoComplete="off">
     {!isLogin ? 

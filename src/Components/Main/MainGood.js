@@ -7,6 +7,7 @@ const MainGood = () => {
   return (
     <div>
       <NavigationBar />
+      {/* If the user is logged in, show home page, else redirect to login page */}
       {checkUser() ? (
         <h1>
           Welcome to Budget Buddy!

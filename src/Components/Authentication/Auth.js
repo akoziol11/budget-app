@@ -7,7 +7,7 @@ import AuthLogin from "./AuthLogin.js"
 const AuthModule = () => {
   const navigate = useNavigate();
 
-  // redirect authenticated users to the home page
+  // redirect authenticated (logged in) users to the home page
   useEffect(() => {
     if (checkUser()) {
       alert("You are already logged in");
@@ -15,6 +15,8 @@ const AuthModule = () => {
     }
   }, [navigate]);
 
+
+  // Login screen with link to register
   return (
     <div>
       <h1> Welcome to Budget Buddy! </h1>

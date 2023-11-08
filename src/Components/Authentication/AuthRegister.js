@@ -16,7 +16,7 @@ const AuthRegister = () => {
   // flags in the state to watch for add/remove updates
   const [add, setAdd] = useState(false);
 
-  // redirect already authenticated users back to home
+  // redirect authenticated (logged in) users back to home
   useEffect(() => {
     if (checkUser()) {
       alert("You are already logged in");
@@ -57,6 +57,8 @@ const AuthRegister = () => {
     setAdd(true);
   };
 
+
+  // Register form (includes first name and last name of AuthForm)
   return (
     <div className = "auth-container">
       <h3>Register to get started</h3>

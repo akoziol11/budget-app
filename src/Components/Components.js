@@ -11,6 +11,7 @@ import ProtectedRoute from "../Common/ProtectedRoute.js";
 import MainGood from "./Main/MainGood.js";
 import BudgetTool from "../Components/BudgetTool/BudgetTool.js"
 
+// Add protected route for BudgetTool
 export default function Components() {
   return (
     <Router>
