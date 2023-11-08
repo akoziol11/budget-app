@@ -6,16 +6,14 @@ import { useNavigate } from "react-router-dom";
 const AuthLogin = () => {
   const navigate = useNavigate();
 
-  // redirect already authenticated users back to home
   const [currentUser, setCurrentUser] = useState({
     email: "",
     password: ""
   });
 
-  // flags in the state to watch for add/remove updates
   const [add, setAdd] = useState(false);
 
-  // redirect already authenticated users back to home
+  // redirect authenticated (logged in) users back to home
   useEffect(() => {
     if (checkUser()) {
       alert("You are already logged in");
@@ -56,6 +54,8 @@ const AuthLogin = () => {
     setAdd(true);
   };
 
+
+  // Login form – doesn't include first name and last name of AuthForm
   return (
     <div className = "auth-container">
       <h3> Already have an account? Sign in to get started</h3>

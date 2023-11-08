@@ -2,6 +2,8 @@ import React from "react";
 import "../../auth-styles.css"
 const AuthForm = ({ user, isLogin, onChange, onSubmit }) => {
 
+  // Login/Register form
+  // Only show first name and last name in form for register
   return (
     <form onSubmit={onSubmit} autoComplete="off">
     {!isLogin ? 
