@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - yyyy-mm-dd
 
+## [0.3.0] - 2023-11-08
+
+### Added
+
+- Added protected route for "/" home page
+- Added login page/feature
+- Added register page/feature
+- Added logout capabilities
+- Added redirection of unauthorized users to "/auth" login page
+- Added redirection of authorized users to "/" home page
+
+
 ## [0.2.0] - 2023-10-13
 
 ### Added
