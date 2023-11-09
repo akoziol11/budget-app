@@ -4,14 +4,12 @@ body {
     font-family: Arial, sans-serif;
   }
   
-  /* Style the header */
   h1 {
     text-align: center;
     margin-top: 20px;
     font-size: 24px;
   }
   
-  /* Style the container */
   .container {
     max-width: 600px;
     margin: 0 auto;
@@ -21,7 +19,6 @@ body {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
   
-  /* Style form elements */
   form {
     margin-top: 20px;
   }

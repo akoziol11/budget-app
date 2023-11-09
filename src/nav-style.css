@@ -19,17 +19,14 @@
   color: white;
 }
 
-/* Turn rebeccapurple when the mouse is over */
 .navigation a:hover {
   background: #6a1b9a;
 }
 
-/* Turn plum when clicked */
 .navigation a:active {
   background: #6a1b9a;
 }
 
-/* Media query styles are only applied if the conditions are met */
 @media all and (max-width: 800px) {
   .navigation {
     flex-flow: column wrap;
