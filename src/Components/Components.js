@@ -10,6 +10,7 @@ import AuthRegister from "./Authentication/AuthRegister";
 import ProtectedRoute from "../Common/ProtectedRoute.js";
 import MainGood from "./Main/MainGood.js";
 import BudgetTool from "../Components/BudgetTool/BudgetTool.js"
+import Expenses from "./Track/Track.js"
 
 // Add protected route for BudgetTool
 export default function Components() {
@@ -22,7 +23,8 @@ export default function Components() {
           path="/"
           element={<ProtectedRoute path="/" element={MainGood} />}
         />
-        <Route path="/tool" element={<BudgetTool />} />
+        <Route path="/plan" element={<ProtectedRoute path="/plan" element={BudgetTool} />} />
+        <Route path="/budget" element={<ProtectedRoute path="/budget" element={Expenses} />} />
         <Route path="*" element={<Navigate to="/auth" replace />} />
       </Routes>
     </Router>

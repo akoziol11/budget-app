@@ -9,9 +9,21 @@ const MainGood = () => {
       <NavigationBar />
       {/* If the user is logged in, show home page, else redirect to login page */}
       {checkUser() ? (
-        <h1>
-          Welcome to Budget Buddy!
-        </h1>
+        <div>
+          <h1>Welcome to Budget Buddy!</h1>
+          <br />
+          <div className="container">
+            <h3>Begin by selecting the "Plan" tab to begin planning your monthly budget. 
+              <br/>
+              <br/>
+              You can also adjust your budget any time on the "Plan" page.
+            </h3>
+          </div>
+          <br />
+          <div className="container">
+            <h3>At anytime, you can view and track your budget on the "Track" page.</h3>
+          </div>
+        </div>
       ) : (
         <Navigate to="/auth" replace />
       )}

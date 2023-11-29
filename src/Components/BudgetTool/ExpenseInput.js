@@ -11,6 +11,7 @@ const ExpenseInput = ({ options, expenseData, setExpenseData }) => {
     setExpenseData({ ...expenseData, amount: parseFloat(event.target.value) });
   };
 
+  // call update expenses and also clear form after submitted
   return (
     <div>
       <form>

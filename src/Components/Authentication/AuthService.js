@@ -1,14 +1,19 @@
 import Parse from "parse";
+import { createBudget } from "../../Services/BudgetService.js";
 
 // used in AuthRegister component
-export const createUser = (newUser) => {
+export const createUser = async (newUser) => {
   const user = new Parse.User();
-
+  const newBudget = await createBudget().catch((error) => {
+    console.error("Error creating budget:", error);
+  });
+  
   user.set("username", newUser.email);
   user.set("firstName", newUser.firstName);
   user.set("lastName", newUser.lastName);
   user.set("password", newUser.password);
   user.set("email", newUser.email);
+  user.set("budget", newBudget);
 
   console.log("User: ", user);
   return user
@@ -51,3 +56,7 @@ export const logoutUser = () => {
 export const checkUser = () => {
   return Parse.User.current()?.authenticated;
 };
+
+export const getCurrentUser = () => {
+  return Parse.User.current();
+}

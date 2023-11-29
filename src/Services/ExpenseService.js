@@ -1,5 +1,5 @@
 import Parse from "parse";
-import { createBudget } from "./BudgetService";
+import { createBudget, getUserBudgetID, updateTotalExpensesForBudget } from "./BudgetService";
 
 // Create a new expense
 // If this is the first time creating an expense, create a new budget to associate with
@@ -7,26 +7,40 @@ export const createExpense = async ({ type, amount }) => {
   let budgetId;
 
   // Check for an existing budget
-  const existingBudget = await getMostRecentBudget();
+  const existingBudget = await getUserBudgetID();
 
   if (existingBudget) {
     budgetId = existingBudget.id;
   } else {
-    // If a budget has not been previous created, create a new one
+    // If a budget has not been previously created, create a new one
     const newBudget = await createBudget();
     budgetId = newBudget.id;
   }
 
+  const Budget = Parse.Object.extend("Budget");
+  const budgetPointer = new Budget();
+  budgetPointer.id = budgetId;
+
+  const currentUser = Parse.User.current();
+  if (currentUser) {
+    currentUser.set("budget", budgetPointer);
+    await currentUser.save();
+    console.log("Budget information saved for the current user");
+  }
   const Expense = Parse.Object.extend("Expense");
   const expense = new Expense();
   expense.set("type", type);
   expense.set("amount", parseFloat(amount));
   expense.set("budget", { __type: "Pointer", className: "Budget", objectId: budgetId });
 
-  return expense.save().then((result) => {
+  return expense.save().then(async (result) => {
+    // Update the total expenses for the associated budget
+    await updateTotalExpensesForBudget(budgetId);
+    
     return result;
   });
 };
+
 
 export const getExpenseById = (id) => {
   const Expense = Parse.Object.extend("Expense");
@@ -47,20 +61,33 @@ export const getAllExpenses = (budgetId) => {
   });
 };
 
-// Helper function to get the most recent budget
-// If a budget has already been created, this gets the most recent budget when creating 
-// a new expense
-const getMostRecentBudget = async () => {
-    const Budget = Parse.Object.extend("Budget");
-    const query = new Parse.Query(Budget);
-  
-    query.descending("createdAt");
-  
-    try {
-      const mostRecentBudget = await query.first();
-      return mostRecentBudget;
-    } catch (error) {
-      console.error("Error fetching most recent budget:", error);
+
+
+export const getUserTotalExpenses = async () => {
+  const currentUser = Parse.User.current();
+
+  if (currentUser) {
+    const budgetPointer = currentUser.get("budget");
+
+    if (budgetPointer) {
+      try {
+        const budget = await budgetPointer.fetch();
+        const totalExpenses = budget.get("totalExpenses");
+        return totalExpenses;
+      } catch (error) {
+        console.error("Error fetching budget:", error);
+        return null;
+      }
+    } else {
+      console.error("Budget information not found for the current user.");
       return null;
     }
-  };
+  } else {
+    console.error("Current user not found");
+    return null;
+  }
+};
+
+export const storeExpensesSelected = async (selectedExpenses) => {
+
+}

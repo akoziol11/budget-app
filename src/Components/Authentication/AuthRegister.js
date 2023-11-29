@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { checkUser, createUser } from "./AuthService";
+import { checkUser, createUser, getCurrentUser } from "./AuthService";
 import AuthForm from "./AuthForm";
 import { useNavigate } from "react-router-dom";
+
 
 const AuthRegister = () => {
   const navigate = useNavigate();
@@ -10,19 +11,43 @@ const AuthRegister = () => {
     firstName: "",
     lastName: "",
     email: "",
-    password: ""
+    password: "",
+    budget: null
   });
 
   // flags in the state to watch for add/remove updates
   const [add, setAdd] = useState(false);
 
   // redirect authenticated (logged in) users back to home
-  useEffect(() => {
-    if (checkUser()) {
-      alert("You are already logged in");
-      navigate("/");
-    }
-  }, [navigate]);
+    // redirect authenticated (logged in) users back to home
+    useEffect(() =>  {
+      const checkBudgetSetAndRedirect = async () => {
+        if (checkUser()) {
+          alert("You are already logged in");
+          const currentUser = getCurrentUser();
+          if (currentUser){
+            const budgetPointer = currentUser.get("budget");
+            if (budgetPointer) {
+              try {
+                const budget = await budgetPointer.fetch();
+                const incomeTotal = budget.get("incomeTotal");
+                console.log("income", incomeTotal);
+  
+                if (incomeTotal === undefined) {
+                  // Redirect to the "/plan" page if incomeTotal is undefined (means their budget has not be planned yet)
+                  navigate("/plan");
+                }
+              } catch (error) {
+                console.error("Error fetching budget:", error);
+              }
+            }
+          } else {
+            navigate("/"); // user already has a budget set
+          }
+        }
+      };
+      checkBudgetSetAndRedirect();
+    }, [navigate]);
 
   // useEffect that run when changes are made to the state variable flags
   useEffect(() => {
@@ -32,7 +57,8 @@ const AuthRegister = () => {
           alert(
             `${userCreated.get("firstName")}, you successfully registered!`
           );
-          navigate("/");
+          console.log(userCreated.attributes)
+          navigate("/plan");
         }
         setAdd(false);
       });

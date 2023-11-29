@@ -6,7 +6,8 @@ import { checkUser } from "../Authentication/AuthService";
 const NavigationBar = () => (
   <nav className="navigation">
     <Link to="/">Home</Link>
-    <Link to="/tool">Budget Tool</Link>
+    <Link to="/plan">Plan</Link>
+    <Link to="/budget">Track</Link>
     {/* If the user is logged in, add logout button to nav bar */}
     {checkUser() && (
       <AuthLogout />

@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { getAllOptions } from "../../Services/Options.js";
 import ExpenseList from "./ExpenseList.js";
-import ExpenseInput from "./ExpenseInput.js";
 import { createIncome } from "../../Services/IncomeService.js";
-import { createExpense } from "../../Services/ExpenseService.js"
+// import { createExpense } from "../../Services/ExpenseService.js"
 import NavigationBar from "../NavigationBar/NavigationBar.js";
+import { useNavigate } from "react-router-dom";
 
 const BudgetTool = () => {
+  const navigate = useNavigate();
+
   const [options, setOptions] = useState([]);
   const [incomeAmount, setIncomeAmount] = useState({ salary: "", gifts: "", other: "" });
-  const [expenseData, setExpenseData] = useState({ type: "", amount: "" });
+  // const [expenseData, setExpenseData] = useState({ type: "", amount: "" });
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -39,26 +41,30 @@ const BudgetTool = () => {
 
         // Clear the form after submission
         setIncomeAmount({ salary: "", gifts: "", other: "" });
+
+        navigate("/budget");
       } catch (error) {
         console.error("Error creating income:", error);
       }
     }
   };
 
-  const handleExpenseSubmit = async (event) => {
-    event.preventDefault();
 
-    if (expenseData.type && expenseData.amount) {
-      try {
-        await createExpense(expenseData);
-        console.log("Expense created successfully:", expenseData);
-        // Clear the form after submission
-        setExpenseData({ type: "", amount: "" });
-      } catch (error) {
-        console.error("Error creating expense:", error);
-      }
-    }
-  };
+
+  // const handleExpenseSubmit = async (event) => {
+  //   event.preventDefault();
+
+  //   if (expenseData.type && expenseData.amount) {
+  //     try {
+  //       await createExpense(expenseData);
+  //       console.log("Expense created successfully:", expenseData);
+  //       // Clear the form after submission
+  //       setExpenseData({ type: "", amount: "" });
+  //     } catch (error) {
+  //       console.error("Error creating expense:", error);
+  //     }
+  //   }
+  // };
 
   return (
     <section>
@@ -66,8 +72,10 @@ const BudgetTool = () => {
       <h1>Welcome to the Budgeting Tool</h1>
       <div className="container">
         <form action="/budgetTool.php" id="budgetForm" onSubmit={handleIncomeSubmit}>
-        <h3>Income:</h3>
-          <label htmlFor="salary">Salary: </label>
+        <h1>Let's begin with setting your monthly budget!</h1>
+        <hr /> 
+        <h3>1. Enter your income:</h3>
+          <label htmlFor="salary">Salary:&nbsp;  
           <input
             type="number"
             placeholder="$"
@@ -76,9 +84,9 @@ const BudgetTool = () => {
             required
             value={incomeAmount.salary}
             onChange={(e) => setIncomeAmount({...incomeAmount, salary: e.target.value})}
-          />
+          /></label>
           <br />
-          <label htmlFor="gifts">Gifts: </label>
+          <label htmlFor="gifts">Gifts:&nbsp;  
           <input 
             type="number" 
             placeholder="$" 
@@ -87,9 +95,9 @@ const BudgetTool = () => {
             required 
             value={incomeAmount.gifts}
             onChange={(e) => setIncomeAmount({...incomeAmount, gifts: e.target.value})}
-            />
+            /></label>
           <br />
-          <label htmlFor="other">Other: </label>
+          <label htmlFor="other">Other:&nbsp; 
           <input 
             type="number" 
             placeholder="$" 
@@ -98,23 +106,26 @@ const BudgetTool = () => {
             required 
             value={incomeAmount.other}
             onChange={(e) => setIncomeAmount({...incomeAmount, other: e.target.value})}
-            />
+            /></label>
           <br />
-          <h3>Expenses:</h3>
+          <hr /> 
+          <h3>2. Select the type of expenses you typically have:</h3>
           <div>
             <ExpenseList options={options} />
           </div>
           <br />
-          <button type="submit">Submit</button>
+          <hr />
+          <br />
+          <button type="submit" onClick={handleIncomeSubmit}>Submit</button>  
         </form>
-        <div>
+        {/* <div>
           <ExpenseInput
             options={options}
             expenseData={expenseData}
             setExpenseData={setExpenseData}
           />
           <button type="submit" onClick={handleExpenseSubmit}>Submit Expense</button>
-        </div>
+        </div> */}
       </div>
     </section>
   );
