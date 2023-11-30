@@ -5,7 +5,7 @@
   },
   {
     "label": "Utilities",
-    "value": "utilities"
+    "value": "Utilities"
   },
   {
     "label": "Room and Board/Rent",
@@ -38,5 +38,9 @@
   {
     "label": "Subscriptions",
     "value": "Subscriptions"
+  },
+  {
+    "label": "Other",
+    "value": "Other"
   }
 ]

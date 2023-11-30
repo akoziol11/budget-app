@@ -1,26 +1,41 @@
-// Future work: only include options selected in the Expense selection form as options
-// in the ExpenseInput form
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { getExpenseTypes } from "../../Services/ExpenseService.js";
 
-const ExpenseInput = ({ options, expenseData, setExpenseData }) => {
+const ExpenseInput = ({ expenseData, setExpenseData }) => {
+  const [expenseTypes, setExpenseTypes] = useState([]);
+
+  useEffect(() => {
+    const fetchExpenseTypes = async () => {
+      try {
+        const fetchedExpenseTypes = await getExpenseTypes();
+        if (fetchedExpenseTypes) {
+          setExpenseTypes(fetchedExpenseTypes);
+        }
+      } catch (error) {
+        console.error("Error fetching expense types:", error);
+      }
+    };
+
+    fetchExpenseTypes();
+  }, []);
+
   const handleTypeChange = (event) => {
-    setExpenseData({ ...expenseData, type: event.target.value });
+    setExpenseData({ type: event.target.value, amount: 0 });
   };
 
   const handleInputChange = (event) => {
     setExpenseData({ ...expenseData, amount: parseFloat(event.target.value) });
   };
 
-  // call update expenses and also clear form after submitted
   return (
     <div>
       <form>
         <label>Select an expense type:</label>
-        <select value={expenseData.type} onChange={handleTypeChange}>
+        <select onChange={handleTypeChange}>
           <option value="">Select an option</option>
-          {options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
+          {expenseTypes.map((expenseType) => (
+            <option key={expenseType} value={expenseType}>
+              {expenseType}
             </option>
           ))}
         </select>

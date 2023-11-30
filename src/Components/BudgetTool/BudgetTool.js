@@ -5,12 +5,14 @@ import { createIncome } from "../../Services/IncomeService.js";
 // import { createExpense } from "../../Services/ExpenseService.js"
 import NavigationBar from "../NavigationBar/NavigationBar.js";
 import { useNavigate } from "react-router-dom";
+import { storeExpensesSelected } from "../../Services/ExpenseService.js";
 
 const BudgetTool = () => {
   const navigate = useNavigate();
 
   const [options, setOptions] = useState([]);
   const [incomeAmount, setIncomeAmount] = useState({ salary: "", gifts: "", other: "" });
+  const [selectedExpenses, setSelectedExpenses] = useState([]);
   // const [expenseData, setExpenseData] = useState({ type: "", amount: "" });
 
   useEffect(() => {
@@ -29,26 +31,44 @@ const BudgetTool = () => {
   const handleIncomeSubmit = async (event) => {
     event.preventDefault();
     const { salary, gifts, other } = incomeAmount;
-
+  
     if (salary && gifts && other) {
       try {
+        // Create income
         await createIncome({
           salary: parseFloat(salary),
           gifts: parseFloat(gifts),
           other: parseFloat(other)
         });
+  
+        // Update selected expenses
+        console.log("selected:", selectedExpenses);
+        await storeExpensesSelected(selectedExpenses);
+  
         console.log("Income created successfully.");
-
+  
         // Clear the form after submission
         setIncomeAmount({ salary: "", gifts: "", other: "" });
-
+        setSelectedExpenses([]);
+  
         navigate("/budget");
       } catch (error) {
         console.error("Error creating income:", error);
       }
     }
   };
+  
 
+
+  const handleCheckboxChange = (value) => {
+    setSelectedExpenses((prevSelected) => {
+      if (prevSelected.includes(value)) {
+        return prevSelected.filter((expense) => expense !== value);
+      } else {
+        return [...prevSelected, value];
+      }
+    });
+  };
 
 
   // const handleExpenseSubmit = async (event) => {
@@ -111,7 +131,7 @@ const BudgetTool = () => {
           <hr /> 
           <h3>2. Select the type of expenses you typically have:</h3>
           <div>
-            <ExpenseList options={options} />
+            <ExpenseList options={options} onCheckboxChange={handleCheckboxChange}/>
           </div>
           <br />
           <hr />

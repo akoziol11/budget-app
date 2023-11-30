@@ -88,6 +88,61 @@ export const getUserTotalExpenses = async () => {
   }
 };
 
-export const storeExpensesSelected = async (selectedExpenses) => {
+export const storeExpensesSelected = async (expenses) => {
+  try {
+    const budgetId = await getUserBudgetID();
+    console.log(budgetId)
 
-}
+    if (!budgetId) {
+      console.error("User does not have a valid budget ID");
+      return;
+    }
+
+    const Budget = Parse.Object.extend("Budget");
+    const budgetToUpdate = new Budget();
+    budgetToUpdate.id = budgetId.id;
+
+    // Fetch the existing budget
+    try {
+      await budgetToUpdate.fetch();
+    } catch (error) {
+      console.error("Error fetching budget:", error);
+      return;
+    }
+
+    // Update the expenseTypes and save
+    budgetToUpdate.set("expenseTypes", expenses);
+    await budgetToUpdate.save();
+
+    console.log("Expense types saved to the budget successfully");
+  } catch (error) {
+    console.error("Error storing expense types:", error);
+  }
+};
+
+export const getExpenseTypes = async () => {
+  try {
+    // Get the user's budget ID
+    const budgetId = await getUserBudgetID();
+
+    if (!budgetId) {
+      console.error("User does not have a valid budget ID");
+      return null;
+    }
+
+    // Fetch the budget object
+    const Budget = Parse.Object.extend("Budget");
+    const budget = new Budget();
+    budget.id = budgetId.id;
+
+    // Retrieve and return the expenseTypes from the budget
+    const expenseTypes = budget.get("expenseTypes");
+    console.log("Expense types retrieved:", expenseTypes);
+    return expenseTypes;
+  } catch (error) {
+    console.error("Error getting expense types:", error);
+    return null;
+  }
+};
+
+
