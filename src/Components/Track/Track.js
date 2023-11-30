@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import Chart from 'chart.js/auto';
 import { getUserTotalIncome } from "../../Services/IncomeService.js";
-import { createExpense } from "../../Services/ExpenseService.js"
+import { createExpense } from "../../Services/ExpenseService.js";
 import NavigationBar from "../NavigationBar/NavigationBar.js";
 import { getAllOptions } from "../../Services/Options.js";
 import ExpenseInput from "../BudgetTool/ExpenseInput.js";
@@ -12,6 +13,7 @@ const Expenses = () => {
   const [totalIncome, setTotalIncome] = useState(null);
   const [remainingBudget, setRemainingBudget] = useState(null);
   const [options, setOptions] = useState([]);
+  const chartRef = useRef(null);
 
   const fetchRemainingBudget = async () => {
     const remaining = await getRemainingBudget();
@@ -19,23 +21,23 @@ const Expenses = () => {
   };
 
   useEffect(() => {
-    // Fetch and update the user's total income on component mount
     const fetchTotalIncome = async () => {
       const income = await getUserTotalIncome();
       setTotalIncome(income || 0);
     };
+
     fetchTotalIncome();
   }, []);
 
-    useEffect(() => {
-      // Fetch and update the user's total income
-      const fetchRemainingBudget = async () => {
-        const remaining = await getRemainingBudget();
-        setRemainingBudget(remaining || 0);
-      };
+  useEffect(() => {
+    const fetchRemainingBudget = async () => {
+      const remaining = await getRemainingBudget();
+      setRemainingBudget(remaining || 0);
+      updateDoughnutChart(totalIncome - remaining, remaining);
+    };
 
     fetchRemainingBudget();
-  }, []);
+  }, [totalIncome]);
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -48,10 +50,31 @@ const Expenses = () => {
     };
 
     fetchOptions();
-  }, []); ; // Pass an empty dependency array to run the effect only once on mount
+  }, []);
 
+  const updateDoughnutChart = (usedBudget, remainingBudget) => {
+    const context = chartRef.current.getContext('2d');
+  
+    // Check if a chart instance already exists
+    if (chartRef.current.chart) {
+      chartRef.current.chart.destroy();
+    }
+  
+    // Create a new Chart instance
+    chartRef.current.chart = new Chart(context, {
+      type: 'doughnut',
+      data: {
+        labels: ['Used Budget', 'Remaining Budget'],
+        datasets: [{
+          data: [usedBudget, remainingBudget],
+          backgroundColor: ['#FF6384', '#36A2EB'],
+        }],
+      },
+    });
+  };
+  
 
-  const handleExpenseSubmit = async (event) => {
+ const handleExpenseSubmit = async (event) => {
     event.preventDefault();
 
     if (expenseData.type && expenseData.amount) {
@@ -60,7 +83,13 @@ const Expenses = () => {
         console.log("Expense created successfully:", expenseData);
         // Clear the form after submission
         setExpenseData({ type: "", amount: "" });
-        await fetchRemainingBudget(); 
+
+        // Fetch and update the remaining budget
+        await fetchRemainingBudget();
+
+        // Calculate used budget and update the doughnut chart
+        const usedBudget = totalIncome - remainingBudget;
+        updateDoughnutChart(usedBudget, remainingBudget);
       } catch (error) {
         console.error("Error creating expense:", error);
       }
@@ -74,6 +103,7 @@ const Expenses = () => {
       <div className="container">
         <h1>Total monthly allowance: ${totalIncome !== null ? totalIncome.toFixed(2) : 0.00}</h1>
         <h2>Remaining balance: ${remainingBudget !== null ? remainingBudget.toFixed(2): 0.00}</h2>
+        <canvas ref={chartRef} width="300" height="300"></canvas>
       </div>
       <div className="expenses">
         <h3> Have a new expense? Add it here!</h3>
@@ -81,7 +111,7 @@ const Expenses = () => {
           options={options}
           expenseData={expenseData}
           setExpenseData={setExpenseData}
-        /> 
+        />
         <button type="submit" onClick={handleExpenseSubmit}>Submit Expense</button>
       </div>
     </section>
@@ -89,3 +119,4 @@ const Expenses = () => {
 };
 
 export default Expenses;
+

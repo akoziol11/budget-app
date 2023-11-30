@@ -1,6 +1,7 @@
 import React from "react";
 
 const ExpenseList = ({ options, onCheckboxChange }) => {
+
   const handleCheckboxChange = (event) => {
     const value = event.target.value;
     onCheckboxChange(value);
@@ -19,7 +20,11 @@ const ExpenseList = ({ options, onCheckboxChange }) => {
     </div>
   ));
 
-  return <div>{optionItems}</div>;
+  return (
+    <div>
+      {optionItems}
+    </div>
+  );
 };
 
 export default ExpenseList;
