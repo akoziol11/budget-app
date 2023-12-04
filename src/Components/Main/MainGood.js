@@ -10,7 +10,7 @@ const MainGood = () => {
       <NavigationBar />
       {checkUser() ? (
         <div>
-          <h1>Welcome to Budget Buddy!</h1>
+          <h1>Welcome to Pocket Pal!</h1>
           <p>
             Begin by selecting the "Plan" tab to start planning your monthly budget. You can adjust your budget anytime on the "Plan" page.
           </p>
