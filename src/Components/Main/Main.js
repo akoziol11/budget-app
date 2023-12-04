@@ -1,9 +1,10 @@
 import AuthModule from "../Authentication/Auth.js";
+import Logo from "../../Images/Logo.png"
 
 const Main = () => {
   return (
     <div>
-      <h1>Welcome to Budget Buddy! </h1>
+      <h1>Welcome to Pocket Pal! </h1>
       <AuthModule />
     </div>
   );

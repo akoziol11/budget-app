@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - yyyy-mm-dd
 
+## [0.3.0] - 2023-12-09
+
+### Added
+- Added protected routes for all internal pages (ie. once the user is logged in)
+- Organized budget tool as the initial planning page (salary and expense types)
+- Limited avaiable expense types to those chosen on initial planning page
+- Added a second planning page (allocate budget to each expense type)
+- Added track page to view budget progress via a chart using chart.js
+- Added a tracker for each expense type
+- Added a page to view and delete all expenses (with time stamps, expense type, and amount)
+
+## [Unreleased] - yyyy-mm-dd
+
 ## [0.3.0] - 2023-11-08
 
 ### Added

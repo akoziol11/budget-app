@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { checkUser } from "./AuthService.js";
 import AuthLogin from "./AuthLogin.js"
+import "../../index.css"
 
 const AuthModule = () => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ const AuthModule = () => {
   // Login screen with link to register
   return (
     <div>
-      <h1> Welcome to Budget Buddy! </h1>
+      <h1>Welcome to PocketPal!</h1>
       <AuthLogin />
       <p>Don't have an account? <Link to="/auth/register">Register here</Link></p>
     </div>

@@ -8,8 +8,12 @@
     "value": "Utilities"
   },
   {
-    "label": "Room and Board/Rent",
-    "value": "Room and Board/Rent"
+    "label": "Room and Board",
+    "value": "Room and Board"
+  },
+  {
+    "label": "Rent",
+    "value": "Rent"
   },
   {
     "label": "Meal Plan",
