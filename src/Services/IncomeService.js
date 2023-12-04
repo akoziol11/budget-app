@@ -1,6 +1,5 @@
 import Parse from "parse";
 import { createBudget, updateTotalIncomeForBudget, getUserBudgetID } from "./BudgetService";
-/* SERVICE FOR PARSE SERVER OPERATIONS */
 
 export const createIncome = async ({ salary, gifts, other }) => {
   // Check for an existing budget
@@ -8,7 +7,7 @@ export const createIncome = async ({ salary, gifts, other }) => {
   const existingBudget = await getUserBudgetID();
 
   if (existingBudget) {
-    budgetId = existingBudget.id;
+    budgetId = existingBudget;
   } else {
     const newBudget = await createBudget();
     budgetId = newBudget.id;
@@ -77,6 +76,7 @@ export const getUserTotalIncome = async () => {
       try {
         const budget = await budgetPointer.fetch();
         const totalIncome = budget.get("totalIncome");
+        console.log("total income: ", totalIncome);
         return totalIncome;
       } catch (error) {
         console.error("Error fetching budget:", error);

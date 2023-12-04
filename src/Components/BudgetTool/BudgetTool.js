@@ -4,7 +4,8 @@ import ExpenseList from "./ExpenseList.js";
 import { createIncome } from "../../Services/IncomeService.js";
 import NavigationBar from "../NavigationBar/NavigationBar.js";
 import { useNavigate } from "react-router-dom";
-import { storeExpensesSelected } from "../../Services/ExpenseService.js";
+import { getExpensePlansByBudgetId, storeExpensesSelected, deleteAllExpenseByBudgetId } from "../../Services/ExpenseService.js";
+import { getUserBudgetID, setPlanComplete } from "../../Services/BudgetService.js";
 
 const BudgetTool = () => {
   const navigate = useNavigate();
@@ -13,12 +14,20 @@ const BudgetTool = () => {
   const [incomeAmount, setIncomeAmount] = useState({ salary: "", gifts: "", other: "" });
   const [selectedExpenses, setSelectedExpenses] = useState([]);
   const [customExpense, setCustomExpense] = useState("");
+  // Used to check if the user already has a plan set
+  const [planSet, setPlanSet] = useState(false); // update variable names to be existingPlan
 
   useEffect(() => {
     const fetchOptions = async () => {
       try {
         const options = await getAllOptions();
         setOptions(options);
+        const budgetId = await getUserBudgetID();
+        const expensePlans = await getExpensePlansByBudgetId(budgetId); // &*
+        if (expensePlans.length !==  0)
+        {
+          setPlanSet(true);
+        }
       } catch (error) {
         console.error("Error fetching options:", error);
       }
@@ -26,6 +35,7 @@ const BudgetTool = () => {
 
     fetchOptions();
   }, []);
+
 
   const handleIncomeSubmit = async (event) => {
     event.preventDefault();
@@ -42,11 +52,22 @@ const BudgetTool = () => {
         await storeExpensesSelected(selectedExpenses);
 
         console.log("Income created successfully.");
+        setPlanComplete(false);
 
         setIncomeAmount({ salary: "", gifts: "", other: "" });
         setSelectedExpenses([]);
 
-        navigate("/budget");
+        console.log("planSet", planSet);
+        if (planSet){
+          const willContinue = window.confirm("You already have a budget set. This will overwrite your old budget and expenses. Do you want to continue?");
+          if (!willContinue){
+            return
+          }
+        }
+        const budgetPointer = await getUserBudgetID(); // &*
+        console.log("PTR", budgetPointer);
+        await deleteAllExpenseByBudgetId(budgetPointer.id);
+        navigate("/plan/expenses");
       } catch (error) {
         console.error("Error creating income:", error);
       }
@@ -57,15 +78,13 @@ const BudgetTool = () => {
     if (customExpense.trim() !== "") {
       setOptions((prevOptions) => [
         ...prevOptions,
-        { value: customExpense.toLowerCase(), label: customExpense },
+        { value: customExpense, label: customExpense },
       ]);
-
-      setSelectedExpenses((prevSelected) => [...prevSelected, customExpense]);
       setCustomExpense("");
     }
   };
 
-  const handleCheckboxChange = (value) => {
+const handleCheckboxChange = (value) => {
     setSelectedExpenses((prevSelected) => {
       if (prevSelected.includes(value)) {
         return prevSelected.filter((expense) => expense !== value);

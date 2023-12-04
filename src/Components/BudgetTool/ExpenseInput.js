@@ -10,6 +10,7 @@ const ExpenseInput = ({ expenseData, setExpenseData }) => {
         const fetchedExpenseTypes = await getExpenseTypes();
         if (fetchedExpenseTypes) {
           setExpenseTypes(fetchedExpenseTypes);
+          console.log("expenseTypes", fetchedExpenseTypes);
         }
       } catch (error) {
         console.error("Error fetching expense types:", error);
@@ -20,11 +21,12 @@ const ExpenseInput = ({ expenseData, setExpenseData }) => {
   }, []);
 
   const handleTypeChange = (event) => {
-    setExpenseData({ type: event.target.value, amount: 0 });
+    setExpenseData({ type: event.target.value, amount: "" });
   };
 
-  const handleInputChange = (event) => {
-    setExpenseData({ ...expenseData, amount: parseFloat(event.target.value) });
+  const handleAmountChange = (event) => {
+    console.log("New amount value:", event.target.value);
+    setExpenseData({ ...expenseData, amount: event.target.value });
   };
 
   return (
@@ -41,11 +43,12 @@ const ExpenseInput = ({ expenseData, setExpenseData }) => {
         </select>
         <label>Enter dollar value of expense:</label>
         <input
-          type="number"
-          value={expenseData.amount}
-          onChange={handleInputChange}
+          type="text"  // Change the input type to text
           placeholder="$$$"
+          name="amount"
+          value={expenseData.amount}
           required
+          onChange={handleAmountChange}
         />
         <br />
         <br />

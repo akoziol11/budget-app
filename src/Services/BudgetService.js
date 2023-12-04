@@ -30,6 +30,24 @@ export const getAllBudgets = () => {
     });
   };
 
+// export const getUserBudgetID = async () => {
+//   const currentUser = Parse.User.current();
+
+//   if (currentUser) {
+//     const budgetPointer = currentUser.get("budget");
+
+//     if (budgetPointer) {
+//       return budgetPointer;
+//     } else {
+//       console.log("No budget pointer found for the current user.");
+//       return null;
+//     }
+//   } else {
+//     console.error("No current user found.");
+//     return null;
+//   }
+// };
+
 export const getUserBudgetID = async () => {
   const currentUser = Parse.User.current();
 
@@ -37,7 +55,7 @@ export const getUserBudgetID = async () => {
     const budgetPointer = currentUser.get("budget");
 
     if (budgetPointer) {
-      return budgetPointer;
+      return budgetPointer.id;
     } else {
       console.log("No budget pointer found for the current user.");
       return null;
@@ -94,10 +112,60 @@ export const getRemainingBudget = async (budgetId) => {
 
   if (income == null){
     income = 0;
-  }
-
+  } 
   if (expenses == null){
     expenses = 0;
   }
   return income - expenses;
 }
+
+export const setPlanComplete = async (value) => {
+  console.log("called now")
+  const budgetId = await getUserBudgetID();
+  if (budgetId){
+    const Budget = Parse.Object.extend("Budget");
+    const budgetToUpdate = new Budget();
+    budgetToUpdate.id = budgetId;
+
+
+    // Set the new totalIncome value
+    budgetToUpdate.set("planComplete", value);
+
+    try {
+      // Save the updated Budget object
+      await budgetToUpdate.save();
+      console.log("planComplete attribute for budget updated successfully to", value);
+    } catch (error) {
+      console.error("Error updating planComplete attribute for budget:", error);
+    }
+  } else {
+    console.error("Budget information not found for the current user.");
+    return null;
+  }
+}
+
+
+export const getIsPlanComplete = async () => {
+  const currentUser = Parse.User.current();
+  
+  if (currentUser) {
+    const budgetPointer = currentUser.get("budget");
+    const budgetId = budgetPointer.id;
+    console.log("testing", budgetPointer);
+
+    if (budgetId) {
+      try {
+        const budget = await budgetPointer.fetch();
+        const isPlanComplete = budget.get("planComplete");
+        console.log("ISPLANCOMPLETE", isPlanComplete);
+        return isPlanComplete;
+      } catch (error) {
+        console.error("Error fetching whether budget plan has been complete:", error);
+        return null;
+      }
+    } else {
+      console.error("Budget information not found for the current user.");
+      return null;
+    }
+  }
+};

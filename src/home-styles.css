@@ -1,0 +1,18 @@
+/* styles.css */
+  
+  .home {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+  }
+  
+  .home h1 {
+    color: #333;
+  }
+  
+  .home h3 {
+    color: #555;
+  }
