@@ -25,7 +25,7 @@ const ExpenseLog = () => {
   
               const isPlanComplete = await getIsPlanComplete();
 
-              if (expenseTypes.length <= 0) {
+              if (expenseTypes === undefined || expenseTypes.length <= 0) {
                 alert("Set your budget first!");
                 navigate("/plan");
               } else if (!isPlanComplete) {
