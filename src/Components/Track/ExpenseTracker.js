@@ -8,6 +8,7 @@ const ExpenseTracker = ({ updatedRemainingExpenseBudgets, updateExpenseTracker }
   const [expensePlans, setExpensePlans] = useState([]);
   const [totalExpensesByType, setTotalExpensesByType] = useState({});
 
+  // Get user's expense plans (ie. plans/budget for each expense type)
   const fetchExpensePlans = async () => {
     try {
       const currentUser = getCurrentUser();
@@ -27,6 +28,7 @@ const ExpenseTracker = ({ updatedRemainingExpenseBudgets, updateExpenseTracker }
     fetchExpensePlans();
   }, [updateExpenseTracker]);
 
+  // Sum user's total expenses for expense types in their plan
   useEffect(() => {
     const calculateTotalExpenses = async () => {
       let budgetId = null;

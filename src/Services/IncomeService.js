@@ -1,8 +1,8 @@
 import Parse from "parse";
 import { createBudget, updateTotalIncomeForBudget, getUserBudgetID } from "./BudgetService";
 
+// Store the user's income (their salary, gifts, and other)
 export const createIncome = async ({ salary, gifts, other }) => {
-  // Check for an existing budget
   let budgetId;
   const existingBudget = await getUserBudgetID();
 
@@ -66,6 +66,7 @@ export const getAllIncomes = (budgetId) => {
   });
 };
 
+// Get the user's total income (sum of salary, gifts, and other)
 export const getUserTotalIncome = async () => {
   const currentUser = Parse.User.current();
 

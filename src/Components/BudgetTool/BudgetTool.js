@@ -13,17 +13,17 @@ const BudgetTool = () => {
   const [options, setOptions] = useState([]);
   const [incomeAmount, setIncomeAmount] = useState({ salary: "", gifts: "", other: "" });
   const [selectedExpenses, setSelectedExpenses] = useState([]);
-  const [customExpense, setCustomExpense] = useState("");
-  // Used to check if the user already has a plan set
-  const [planSet, setPlanSet] = useState(false); // update variable names to be existingPlan
+  const [customExpense, setCustomExpense] = useState(""); // For the user to add a custom expense type
+  const [planSet, setPlanSet] = useState(false);   // Used to check if the user already has a plan set
 
+  // Get expense type options and check if the user already has their budget plan set
   useEffect(() => {
     const fetchOptions = async () => {
       try {
         const options = await getAllOptions();
         setOptions(options);
         const budgetId = await getUserBudgetID();
-        const expensePlans = await getExpensePlansByBudgetId(budgetId); // &*
+        const expensePlans = await getExpensePlansByBudgetId(budgetId);
         if (expensePlans.length !==  0)
         {
           setPlanSet(true);
@@ -37,6 +37,7 @@ const BudgetTool = () => {
   }, []);
 
 
+  // Save income and expense type information
   const handleIncomeSubmit = async (event) => {
     event.preventDefault();
     const { salary, gifts, other } = incomeAmount;
@@ -57,16 +58,16 @@ const BudgetTool = () => {
         setIncomeAmount({ salary: "", gifts: "", other: "" });
         setSelectedExpenses([]);
 
-        console.log("planSet", planSet);
+        // if the user already has a budget plan set, ask if they want to override
         if (planSet){
           const willContinue = window.confirm("You already have a budget set. This will overwrite your old budget and expenses. Do you want to continue?");
           if (!willContinue){
             return
           }
         }
-        const budgetPointer = await getUserBudgetID(); // &*
-        console.log("PTR", budgetPointer);
+        const budgetPointer = await getUserBudgetID();
         await deleteAllExpenseByBudgetId(budgetPointer.id);
+        // navigate to second planning page
         navigate("/plan/expenses");
       } catch (error) {
         console.error("Error creating income:", error);
@@ -74,6 +75,7 @@ const BudgetTool = () => {
     }
   };
 
+  // Add a custom expense type
   const handleAddCustomExpense = () => {
     if (customExpense.trim() !== "") {
       setOptions((prevOptions) => [

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { logoutUser } from "./AuthService";
-import "../../nav-style.css"; // Import the CSS file for navigation styles
+import "../../nav-style.css";
 
 const AuthLogout = () => {
   const navigate = useNavigate();

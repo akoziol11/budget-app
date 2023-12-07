@@ -14,7 +14,7 @@ const AuthLogin = () => {
 
   const [add, setAdd] = useState(false);
 
-  // redirect authenticated (logged in) users back to home
+  // redirect authenticated (logged in) users depending if their budget is set or not
   useEffect(() =>  {
     const checkBudgetSetAndRedirect = async () => {
       if (checkUser()) {
@@ -47,7 +47,7 @@ const AuthLogin = () => {
     checkBudgetSetAndRedirect();
   }, [navigate]);
 
-  // useEffect that run when changes are made to the state variable flags
+  // Redirect authenticated users depending if their budget is set
   useEffect(() => {
     const loginUserAndRedirect = async () => {
       if (currentUser && add) {

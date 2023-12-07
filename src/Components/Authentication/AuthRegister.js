@@ -15,41 +15,38 @@ const AuthRegister = () => {
     budget: null
   });
 
-  // flags in the state to watch for add/remove updates
   const [add, setAdd] = useState(false);
 
   // redirect authenticated (logged in) users back to home
-    // redirect authenticated (logged in) users back to home
-    useEffect(() =>  {
-      const checkBudgetSetAndRedirect = async () => {
-        if (checkUser()) {
-          alert("You are already logged in");
-          const currentUser = getCurrentUser();
-          if (currentUser){
-            const budgetPointer = currentUser.get("budget");
-            if (budgetPointer) {
-              try {
-                const budget = await budgetPointer.fetch();
-                const incomeTotal = budget.get("incomeTotal");
-                console.log("income", incomeTotal);
-  
-                if (incomeTotal === undefined) {
-                  // Redirect to the "/plan" page if incomeTotal is undefined (means their budget has not be planned yet)
-                  navigate("/plan");
-                }
-              } catch (error) {
-                console.error("Error fetching budget:", error);
-              }
-            }
-          } else {
-            navigate("/"); // user already has a budget set
-          }
-        }
-      };
-      checkBudgetSetAndRedirect();
-    }, [navigate]);
+  useEffect(() =>  {
+    const checkBudgetSetAndRedirect = async () => {
+      if (checkUser()) {
+        alert("You are already logged in");
+        const currentUser = getCurrentUser();
+        if (currentUser){
+          const budgetPointer = currentUser.get("budget");
+          if (budgetPointer) {
+            try {
+              const budget = await budgetPointer.fetch();
+              const incomeTotal = budget.get("incomeTotal");
+              console.log("income", incomeTotal);
 
-  // useEffect that run when changes are made to the state variable flags
+              if (incomeTotal === undefined) {
+                // Redirect to the "/plan" page if incomeTotal is undefined (means their budget has not be planned yet)
+                navigate("/plan");
+              }
+            } catch (error) {
+              console.error("Error fetching budget:", error);
+            }
+          }
+        } else {
+          navigate("/");
+        }
+      }
+    };
+    checkBudgetSetAndRedirect();
+  }, [navigate]);
+
   useEffect(() => {
     if (newUser && add) {
       createUser(newUser).then((userCreated) => {

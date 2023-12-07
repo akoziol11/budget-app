@@ -25,6 +25,7 @@ const Track = () => {
   const chartRef = useRef(null);
   const navigate = useNavigate();
 
+  // Get user's remaining balance/budget
   const fetchRemainingBudget = async () => {
     let remaining = await getRemainingBudget();
     console.log("remaining here", remaining);
@@ -32,6 +33,7 @@ const Track = () => {
     return remaining;
   };
 
+  // Get user's total income
   useEffect(() => {
     const fetchTotalIncome = async () => {
       const income = await getUserTotalIncome();
@@ -41,6 +43,7 @@ const Track = () => {
     fetchTotalIncome();
   }, []);
 
+  // Update tracker chart
   const updateDoughnutChart = useCallback((usedBudget, remainingBudget) => {
     if (budgetSet && chartRef.current) {
       const context = chartRef.current.getContext('2d');
@@ -64,6 +67,7 @@ const Track = () => {
     }
   }, [budgetSet]);
 
+  // Check if the user is over budget and update chart
   useEffect(() => {
     const fetchRemainingBudget = async () => {
       const remaining = await getRemainingBudget();
@@ -75,6 +79,7 @@ const Track = () => {
     fetchRemainingBudget();
   }, [totalIncome, updateDoughnutChart]);
 
+  // Get all expense type options
   useEffect(() => {
     const fetchOptions = async () => {
       try {
@@ -88,6 +93,7 @@ const Track = () => {
     fetchOptions();
   }, []);
 
+  // Check if the user's budget is set and redirect if needed
   useEffect(() => {
     const checkBudgetSetAndRedirect = async () => {
       const currentUser = getCurrentUser();
@@ -96,7 +102,7 @@ const Track = () => {
         if (budgetPointer) {
           try {
             const budget = await budgetPointer.fetch();
-            const expenseTypes = budget.get("expenseTypes"); // add to planExpenses page
+            const expenseTypes = budget.get("expenseTypes");
             const isPlanComplete = await getIsPlanComplete();
 
             if (expenseTypes.length <= 0) {
@@ -123,7 +129,6 @@ const Track = () => {
       try {
         await createExpense(expenseData);
   
-        // Fetch the remaining budget and update the state
         const remaining = await fetchRemainingBudget();
         setRemainingBudget((prevRemainingBudget) => {
           const usedBudget = totalIncome - prevRemainingBudget;
@@ -132,19 +137,19 @@ const Track = () => {
           // Update isOverBudget based on the new remaining budget
           setIsOverBudget(remaining < 0);
   
-          return remaining; // Update with the most recent value
+          return remaining;
         });
   
-        // Calculate and update total expenses
+        // Calculate and update total expenses for each expense type
         const updatedRemainingExpenseBudgetsForExpenseType = await calculateTotalExpenses();
         setUpdatedRemainingExpenseBudgets(updatedRemainingExpenseBudgetsForExpenseType);
-  
-        // Step 2: Trigger the callback to refresh ExpenseTracker
+
+        // check if the expense tracker needs to be refreshed/updated
         if (updateExpenseTracker) {
           updateExpenseTracker((prev) => !prev);
         }
   
-        // Reset the form fields after successful expense creation
+        // Empty form after form is submitted
         setExpenseData({ type: "", amount: "" });
       } catch (error) {
         console.error("Error creating expense:", error);
@@ -152,7 +157,7 @@ const Track = () => {
     }
   };
   
-
+  // Calculate total expenses across all expense types
   const calculateTotalExpenses = async () => {
     let budgetId = null;
     const totalExpenses = {};

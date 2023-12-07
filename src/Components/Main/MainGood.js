@@ -2,7 +2,7 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import NavigationBar from "../NavigationBar/NavigationBar.js";
 import { checkUser } from "../Authentication/AuthService";
- import "../../home-styles.css"
+import "../../home-styles.css"
 
 const MainGood = () => {
   return (
@@ -15,7 +15,7 @@ const MainGood = () => {
             Begin by selecting the "Plan" tab to start planning your monthly budget. You can adjust your budget anytime on the "Plan" page.
           </p>
           <p>
-            At any time, you can view and track your budget on the "Track" page.
+            You can view and track your budget on the "Track" page.
           </p>
         </div>
       ) : (

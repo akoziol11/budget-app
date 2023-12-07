@@ -4,13 +4,13 @@ import { getExpenseTypes } from "../../Services/ExpenseService.js";
 const ExpenseInput = ({ expenseData, setExpenseData }) => {
   const [expenseTypes, setExpenseTypes] = useState([]);
 
+  // Get user's selected expense types
   useEffect(() => {
     const fetchExpenseTypes = async () => {
       try {
         const fetchedExpenseTypes = await getExpenseTypes();
         if (fetchedExpenseTypes) {
           setExpenseTypes(fetchedExpenseTypes);
-          console.log("expenseTypes", fetchedExpenseTypes);
         }
       } catch (error) {
         console.error("Error fetching expense types:", error);
@@ -25,7 +25,6 @@ const ExpenseInput = ({ expenseData, setExpenseData }) => {
   };
 
   const handleAmountChange = (event) => {
-    console.log("New amount value:", event.target.value);
     setExpenseData({ ...expenseData, amount: event.target.value });
   };
 
@@ -43,7 +42,7 @@ const ExpenseInput = ({ expenseData, setExpenseData }) => {
         </select>
         <label>Enter dollar value of expense:</label>
         <input
-          type="text"  // Change the input type to text
+          type="text"
           placeholder="$$$"
           name="amount"
           value={expenseData.amount}

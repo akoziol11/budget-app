@@ -42,7 +42,6 @@ export const createExpense = async ({ type, amount }) => {
   });
 };
 
-
 export const getExpenseById = (id) => {
   const Expense = Parse.Object.extend("Expense");
   const query = new Parse.Query(Expense);
@@ -63,7 +62,7 @@ export const getAllExpenses = (budgetId) => {
 };
 
 
-
+// Get the sum of the user's expenses
 export const getUserTotalExpenses = async () => {
   const currentUser = Parse.User.current();
 
@@ -74,7 +73,6 @@ export const getUserTotalExpenses = async () => {
       try {
         const budget = await budgetPointer.fetch();
         const totalExpenses = budget.get("totalExpenses");
-        console.log("total expenses: ", totalExpenses);
         return totalExpenses;
       } catch (error) {
         console.error("Error fetching budget:", error);
@@ -90,10 +88,10 @@ export const getUserTotalExpenses = async () => {
   }
 };
 
+// Store the expense types the user has selected
 export const storeExpensesSelected = async (expenses) => {
   try {
     const budgetId = await getUserBudgetID();
-    console.log("CHECKING***", budgetId); //&*
 
     if (!budgetId) {
       console.error("User does not have a valid budget ID");
@@ -104,15 +102,12 @@ export const storeExpensesSelected = async (expenses) => {
     const budgetToUpdate = new Budget();
     budgetToUpdate.id = budgetId;
 
-    // Fetch the existing budget
     try {
       await budgetToUpdate.fetch();
     } catch (error) {
       console.error("Error fetching budget:", error);
       return;
     }
-
-    // Update the expenseTypes and save
     budgetToUpdate.set("expenseTypes", expenses);
     await budgetToUpdate.save();
 
@@ -122,6 +117,7 @@ export const storeExpensesSelected = async (expenses) => {
   }
 };
 
+// Get the expense types the user selected
 export const getExpenseTypes = async () => {
   try {
     // Get the user's budget ID
@@ -132,12 +128,9 @@ export const getExpenseTypes = async () => {
       return null;
     }
 
-    // Fetch the budget object
     const Budget = Parse.Object.extend("Budget");
     const query = new Parse.Query(Budget);
     const budget = await query.get(budgetId);
-
-    // Retrieve and return the expenseTypes from the budget
     const expenseTypes = budget.get("expenseTypes");
     console.log("Expense types retrieved:", expenseTypes);
     return expenseTypes;
@@ -147,10 +140,10 @@ export const getExpenseTypes = async () => {
   }
 };
 
-
+// store the user's allocated budget for each expense type
+// ie. the plan for each of their expenses
 export const storeExpensePlan = async (expenseTypeAmounts) => {
-  console.log("trying to store expense plan");
-  console.log("before try", expenseTypeAmounts)
+
   try {
     const budgetId = await getUserBudgetID();
     console.log(budgetId)
@@ -163,8 +156,6 @@ export const storeExpensePlan = async (expenseTypeAmounts) => {
     const Budget = Parse.Object.extend("Budget");
     const budgetToUpdate = new Budget();
     budgetToUpdate.id = budgetId;
-    console.log("ExpenseTypeAmounts: ", expenseTypeAmounts, "budgetId**** :", budgetToUpdate.id);
-
     
     for (const [type, amount] of Object.entries(expenseTypeAmounts)) {
       const ExpensePlan = Parse.Object.extend("ExpensePlan");
@@ -172,9 +163,7 @@ export const storeExpensePlan = async (expenseTypeAmounts) => {
       expensePlan.set("type", type);
       expensePlan.set("amount", parseFloat(amount));
       expensePlan.set("budget", budgetToUpdate);
-      console.log()
 
-      // Save the ExpensePlan
       try {
         await expensePlan.save();
         console.log("Expense type saved to the budget successfully");
@@ -187,37 +176,32 @@ export const storeExpensePlan = async (expenseTypeAmounts) => {
   }
 };
 
-// Function to get all ExpensePlan items for a given budgetId
+// Get the amount allocated for each expense type
+// ie. the expense plan for each expense type
 export const getExpensePlansByBudgetId = async (budgetId) => {
   try {
     const ExpensePlan = Parse.Object.extend('ExpensePlan');
     const query = new Parse.Query(ExpensePlan);
 
-    // Create a Parse pointer to the Budget object
     const budgetPointer = {
       __type: 'Pointer',
       className: 'Budget',
       objectId: budgetId,
     };
-
-    // Add a constraint to filter ExpensePlan items based on the provided budgetId
     query.equalTo('budget', budgetPointer);
-
-    // Execute the query
     const expensePlans = await query.find();
 
-    // Extract and return the data
     return expensePlans.map((expensePlan) => ({
       id: expensePlan.id,
       type: expensePlan.get('type'),
       amount: expensePlan.get('amount'),
-      // Include other fields as needed
     }));
   } catch (error) {
     console.error('Error fetching ExpensePlan items:', error);
   }
 };
 
+// Get all the user's expenses associated with their budgetId
 export const getExpensesByBudgetId = async (budgetId) => {
   try {
     const Expense = Parse.Object.extend('Expense');
@@ -232,6 +216,7 @@ export const getExpensesByBudgetId = async (budgetId) => {
   }
 };
 
+// Get the user's expenses associated with their budgetId of a certain expense type
 export const getExpensesByBudgetIdAndType = async (budgetId, expenseType) => {
   try {
     const Expense = Parse.Object.extend('Expense');
@@ -248,22 +233,20 @@ export const getExpensesByBudgetIdAndType = async (budgetId, expenseType) => {
   }
 };
 
-
+// Delete all of the user's expense plans
+// ie. clear the amount of their budget that they allocated for each expense type
 export const deleteExpensePlansByBudgetId = async (budgetId) => {
   try {
-    // Create a Parse pointer to the Budget object
     const budgetPointer = {
       __type: 'Pointer',
       className: 'Budget',
       objectId: budgetId,
     };
 
-    // Query for ExpensePlan items associated with the provided budgetId
     const ExpensePlan = Parse.Object.extend('ExpensePlan');
     const query = new Parse.Query(ExpensePlan);
     query.equalTo('budget', budgetPointer);
 
-    // Find and delete all matching ExpensePlan items
     const expensePlans = await query.find();
     await Parse.Object.destroyAll(expensePlans);
 
@@ -274,21 +257,19 @@ export const deleteExpensePlansByBudgetId = async (budgetId) => {
   }
 };
 
+// Delete all of the user's expenses
 export const deleteAllExpenseByBudgetId = async (budgetId) => {
   try {
-    // Create a Parse pointer to the Budget object
     const budgetPointer = {
       __type: 'Pointer',
       className: 'Budget',
       objectId: budgetId,
     };
 
-    // Query for ExpensePlan items associated with the provided budgetId
     const Expenses = Parse.Object.extend('Expense');
     const query = new Parse.Query(Expenses);
     query.equalTo('budget', budgetPointer);
 
-    // Find and delete all matching ExpensePlan items
     const expenses = await query.find();
     await Parse.Object.destroyAll(expenses);
     await updateTotalExpensesForBudget(budgetId);

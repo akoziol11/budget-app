@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getExpenseTypes, storeExpensePlan } from "../../Services/ExpenseService.js";
+import { deleteAllExpenseByBudgetId, getExpenseTypes, storeExpensePlan } from "../../Services/ExpenseService.js";
 import NavigationBar from "../NavigationBar/NavigationBar.js";
 import { getUserTotalIncome } from "../../Services/IncomeService.js";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,7 @@ const PlanExpenses = () => {
 
   const navigate = useNavigate();
 
+  // Get the user's total income
   useEffect(() => {
     const fetchTotalIncome = async () => {
       const income = await getUserTotalIncome();
@@ -22,6 +23,7 @@ const PlanExpenses = () => {
     fetchTotalIncome();
   }, []);
 
+  // Get the user's selected expense types
   useEffect(() => {
     const fetchExpenseTypes = async () => {
       try {
@@ -43,6 +45,8 @@ const PlanExpenses = () => {
     fetchExpenseTypes();
   }, []);
 
+  // Redirect users who have not completed first planning page at least once
+  // or users who have not started a new plan
   useEffect(() =>  {
     const checkBudgetSetAndRedirect = async () => {
       const currentUser = getCurrentUser();
@@ -56,9 +60,11 @@ const PlanExpenses = () => {
 
             if (expenseTypes.length <= 0) {
               alert("Set your budget first!")
-              // Redirect to the "/plan" page if incomeTotal is undefined (means their budget has not be planned yet)
+              // Redirect to the "/plan" page if incomeTotal is undefined
+              // (it means the first step of budget has not be planned yet)
               navigate("/plan");
             } else if (isPlanComplete) {
+              // Redirect user's who have not initiated a new plan back to the home page
               navigate("/");
             }
           } catch (error) {
@@ -74,11 +80,11 @@ const PlanExpenses = () => {
   const handleExpensePlanSubmit = async (event) => {
     event.preventDefault();
     let total = 0;
+    // Sum the budget allocation for each expense type
     Object.entries(expenseTypeAmounts).forEach(([type, amount]) => {
-        console.log("type: ", type, "amount: ", amount);
         total = total + parseFloat(amount);
     });
-    console.log("total", total);
+    // Check if sum equals their total income
     if (total !== totalIncome){
         alert("Your expenses do not sum to your budget! Please adjust your values.")
     } else {
@@ -89,9 +95,11 @@ const PlanExpenses = () => {
           if (budgetPointer) {
             // Delete existing expense plans
             await deleteExpensePlansByBudgetId(budgetPointer.id);
-
+            // Delete all previous expenses
+            await deleteAllExpenseByBudgetId(budgetPointer.id);
             // Create new expense plans with updated values
             await storeExpensePlan(expenseTypeAmounts);
+            // User has completed both planning pages
             await setPlanComplete(true);
             
             navigate("/budget");

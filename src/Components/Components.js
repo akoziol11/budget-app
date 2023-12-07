@@ -14,7 +14,6 @@ import Track from "./Track/Track.js"
 import PlanExpenses from "./BudgetTool/PlanExpenses.js";
 import ExpenseLog from "./Track/ExpenseLog.js";
 
-// Add protected route for BudgetTool
 export default function Components() {
   return (
     <Router>
