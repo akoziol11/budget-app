@@ -28,7 +28,6 @@ const Track = () => {
   // Get user's remaining balance/budget
   const fetchRemainingBudget = async () => {
     let remaining = await getRemainingBudget();
-    console.log("remaining here", remaining);
     setRemainingBudget(remaining || 0);
     return remaining;
   };

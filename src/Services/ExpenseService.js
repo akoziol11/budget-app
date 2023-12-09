@@ -5,7 +5,6 @@ import { createBudget, getUserBudgetID, updateTotalExpensesForBudget } from "./B
 // If this is the first time creating an expense, create a new budget to associate with
 export const createExpense = async ({ type, amount }) => {
   let budgetId;
-  console.log("Trying to create expense");
 
   // Check for an existing budget
   const existingBudgetID = await getUserBudgetID(); // &* and below
@@ -20,7 +19,6 @@ export const createExpense = async ({ type, amount }) => {
   const Budget = Parse.Object.extend("Budget");
   const budgetPointer = new Budget();
   budgetPointer.id = budgetId;
-  console.log("testing", budgetPointer.id);
 
   const currentUser = Parse.User.current();
   if (currentUser) {
@@ -132,7 +130,6 @@ export const getExpenseTypes = async () => {
     const query = new Parse.Query(Budget);
     const budget = await query.get(budgetId);
     const expenseTypes = budget.get("expenseTypes");
-    console.log("Expense types retrieved:", expenseTypes);
     return expenseTypes;
   } catch (error) {
     console.error("Error getting expense types:", error);
@@ -146,7 +143,6 @@ export const storeExpensePlan = async (expenseTypeAmounts) => {
 
   try {
     const budgetId = await getUserBudgetID();
-    console.log(budgetId)
 
     if (!budgetId) {
       console.error("User does not have a valid budget ID");
@@ -225,7 +221,6 @@ export const getExpensesByBudgetIdAndType = async (budgetId, expenseType) => {
     query.equalTo('type', expenseType);
 
     const expenses = await query.find();
-    console.log("budgetId, ", budgetId, "expenseType", expenseType, "epxenses", expenses);
     return expenses;
   } catch (error) {
     console.error('Error fetching expenses by budget ID and type:', error);

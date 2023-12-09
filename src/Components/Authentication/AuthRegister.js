@@ -29,7 +29,6 @@ const AuthRegister = () => {
             try {
               const budget = await budgetPointer.fetch();
               const incomeTotal = budget.get("incomeTotal");
-              console.log("income", incomeTotal);
 
               if (incomeTotal === undefined) {
                 // Redirect to the "/plan" page if incomeTotal is undefined (means their budget has not be planned yet)
@@ -54,7 +53,6 @@ const AuthRegister = () => {
           alert(
             `${userCreated.get("firstName")}, you successfully registered!`
           );
-          console.log(userCreated.attributes)
           navigate("/plan");
         }
         setAdd(false);
@@ -64,9 +62,7 @@ const AuthRegister = () => {
 
   const onChangeHandler = (e) => {
     e.preventDefault();
-    console.log(e.target);
     const { name, value: newValue } = e.target;
-    console.log(newValue);
 
     setNewUser({
       ...newUser,

@@ -26,7 +26,6 @@ const AuthLogin = () => {
             try {
               const budget = await budgetPointer.fetch();
               const incomeTotal = budget.get("totalIncome");
-              console.log("income", incomeTotal);
 
               if (incomeTotal === undefined) {
                 // Redirect to the "/plan" page if incomeTotal is undefined (means their budget has not be planned yet)
@@ -65,7 +64,6 @@ const AuthLogin = () => {
             try {
               const budget = await budgetPointer.fetch();
               const incomeTotal = budget.get("totalIncome");
-              console.log("income", incomeTotal);
   
               if (incomeTotal === undefined) {
                 // Redirect to the "/plan" page if incomeTotal is undefined (means budget has not been planned yet)
@@ -92,9 +90,7 @@ const AuthLogin = () => {
 
   const onChangeHandler = (e) => {
     e.preventDefault();
-    console.log(e.target);
     const { name, value: newValue } = e.target;
-    console.log(newValue);
 
     setCurrentUser({
       ...currentUser,

@@ -37,7 +37,6 @@ export const loginUser = (currUser) => {
   user.set("username", currUser.email);
 
   console.log("User: ", user);
-  console.log();
   return user
     .logIn(user.email, user.password)
     .then((currUserSaved) => {
