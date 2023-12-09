@@ -2,9 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased] - yyyy-mm-dd
-
-## [0.3.0] - 2023-12-09
+## [0.4.0] - 2023-12-09
 
 ### Added
 - Added protected routes for all internal pages (ie. once the user is logged in)
@@ -14,8 +12,6 @@ All notable changes to this project will be documented in this file.
 - Added track page to view budget progress via a chart using chart.js
 - Added a tracker for each expense type
 - Added a page to view and delete all expenses (with time stamps, expense type, and amount)
-
-## [Unreleased] - yyyy-mm-dd
 
 ## [0.3.0] - 2023-11-08
 
